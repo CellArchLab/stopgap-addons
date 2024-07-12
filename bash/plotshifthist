@@ -1,0 +1,18 @@
+#!/bin/bash
+# Plots STOPGAP score histogram from a motl using GNUPLOT
+# Based on https://stackoverflow.com/a/7454274
+
+gnuplot -p <<EOF
+n=100 #number of intervals
+max=1. #max value
+min=0. #min value
+width=(max-min)/n #interval width
+#function used to map a value to the intervals
+hist(x,width)=width*floor(x/width)+width/2.0
+set boxwidth width*0.9
+set style fill solid 0.5 # fill style
+set title "STOPGAP score histogram for $1"
+
+#count and plot
+plot "$1" u (hist(\$9,width)):(1.0) smooth freq w boxes lc rgb"blue" notitle
+EOF

@@ -1,0 +1,14 @@
+#!/bin/bash
+# Takes an IMOD list of points as a .mod file and converts to a boundary mask using STOPGAP functions.
+# Syntax:
+# boundarymask <model file> <tomogram .mrc or .rec file> <output .mrc filename>
+# RDR 30/12/2021
+
+modname=$1
+tomoname=$2
+maskname=$3
+
+txtname="${modname%.*}".txt
+model2point ${modname} ${txtname}
+
+matlab -nojvm -batch "mask = sg_tm_create_boundary_mask('$tomoname','$txtname'); sg_mrcwrite('$maskname',mask);"

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+infile=$1
+outfile="${infile%.*}"
+
+newstack -multadd -1,0  $infile $outfile-inv.mrc

@@ -1,0 +1,55 @@
+#! /usr/bin/env bash
+set -e              # Crash on error
+set -o nounset      # Crash on unset variables
+
+## stopgap_tm_parser.sh
+# This script is used to generate a properly formated STOPGAP .star parameter 
+# file fo template matching. When the parser is run, a new parameter file is 
+# generated, or if one already exists, it is appended.
+#
+# WW 01-2019
+# RDR 11-2020
+
+# Read config file. Can be given as an argument or read from the current directory.
+
+# # Check if we are on sciCORE cluster:
+# if [ `hostname | grep bc2.ch | echo $?` -eq 0 ]; then 
+#     ml purge
+#     ml load MCR/9.0
+#     ml load OpenMPI/4.1.1-GCC-10.3.0
+# fi
+
+cfgfile=sg_tm.cfg
+if [ $# -eq 0 ]; then
+    source ${cfgfile}
+else
+    source "$1"
+fi
+rootdir=`pwd`/  # Root subtomogram averaging directory (automatically defined as the directory from which the script is called)
+
+if [ "${lp_res}" != "none" ]; then
+
+	lp_rad=`echo "$boxsize * $pixelsize / $lp_res" | bc`
+
+fi
+
+if [ "${hp_res}" != "none" ]; then
+
+	hp_rad=`echo "$boxsize * $pixelsize / $hp_res" | bc`
+
+fi
+
+
+
+########################################################################################################################################################################################################
+########## GENERATE STOPGAP .STAR FILE
+########################################################################################################################################################################################################
+
+# Path to MATLAB executables
+parser="${STOPGAPHOME}/bin/stopgap_parser.sh"
+
+
+# Run parser
+eval "${parser} temp_match param_name ${param_name} rootdir ${rootdir} tempdir ${tempdir} commdir ${commdir} listdir ${listdir} tmpldir ${tmpldir} maskdir ${maskdir} mapdir ${mapdir} metadir ${metadir} tomolist_name ${tomolist_name} wedgelist_name ${wedgelist_name} tlist_name ${tlist_name} smap_name ${smap_name} omap_name ${omap_name} tmap_name ${tmap_name} binning ${binning} lp_rad ${lp_rad} lp_sigma ${lp_sigma} hp_rad ${hp_rad} hp_sigma ${hp_sigma} calc_exp ${calc_exp} calc_ctf ${calc_ctf} apply_laplacian ${apply_laplacian} noise_corr ${noise_corr}"
+
+exit

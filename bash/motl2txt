@@ -1,0 +1,11 @@
+#!/bin/bash
+# Converts a STOPGAP motive list (motl) to a text file with the points. This text file can later be read by IMOD e.g. with point2model.
+# Usage: motl2txt <input_file> <output_file> <tomo_num>
+# 
+# RDR 24/11/2020
+
+motlfile=$1
+txtfile=$2
+tomonum=$3
+
+awk -v tomonum="$tomonum" '(NF > 1 && $2 == tomonum) {print $3, $6+$10, $7+$11, $8+$12}' $motlfile > $txtfile

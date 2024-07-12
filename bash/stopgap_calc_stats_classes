@@ -1,0 +1,32 @@
+#!/bin/bash
+
+k="${@: -1}"
+for motl in "$@"
+do
+
+	if [ "$motl"x != "$k"x ]
+	then
+		
+		i=1
+		ntot=0
+		while [ $i -le $k ]; do
+
+			nptcls=`awk -v k=$i '{ if ($16==k) print}' $motl | wc -l`
+			avgstd=`awk -v k=$i '{ if ( NF > 1 && $16==k ) print }' $motl | awk '{sc += $9; sc2+=$9^2} END { print sc/NR, sqrt((sc2-sc^2/NR)/NR) }'` 
+			avg=`echo $avgstd | awk '{print $1}'`
+			std=`echo $avgstd | awk '{print $2}'`
+			echo "$motl class $i number of particles: $nptcls, average score: $avg, standard deviation: $std" 
+			ntot=$(($ntot+$nptcls)) 
+
+			i=$(( $i + 1 ))
+
+		done
+
+		avgstd=`awk '{ if ( NF > 1 ) print }' $motl | awk '{sc += $9; sc2+=$9^2} END { print sc/NR, sqrt((sc2-sc^2/NR)/NR) }'` 
+		avg=`echo $avgstd | awk '{print $1}'`
+		std=`echo $avgstd | awk '{print $2}'`
+		echo "$motl total number of particles: $ntot, average score: $avg, standard deviation: $std"  
+
+	fi
+	
+done

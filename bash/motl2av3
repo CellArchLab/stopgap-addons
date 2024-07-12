@@ -1,0 +1,31 @@
+#!/bin/bash
+# Converts a STOPGAP motive list (motl) to an AV3 text file which can be read by Chimera "Place Object" plugin. 
+# Based on MATLAB script sg_motl_stopgap_to_av3 from sg_toolbox.
+# Assumes MATLAB is available in PATH and properly configured to find sg_toolbox.
+# 
+# RDR 24/11/2020
+
+motlfile=$1
+av3file=$2
+tomonum=$3
+
+# Check if we are on sciCORE cluster:
+# if [ `hostname | grep bc2.ch | echo $?` -eq 0 ]; then 
+#     ml purge
+#     ml load MATLAB
+# fi
+
+if [ ${3}x != 'x' ]; then
+
+	awk '{ if (NF==1) print }' $motlfile > "${motlfile%.*}"_tomo${tomonum}.star
+	awk -v tomonum="$tomonum" '(NF > 1 && $2 == tomonum) {print}' $motlfile >> "${motlfile%.*}"_tomo${tomonum}.star
+
+	newmotlfile="${motlfile%.*}"_tomo${tomonum}.star
+
+else
+
+	newmotlfile=$1
+
+fi
+
+matlab -nojvm -batch "sg_motl_stopgap_to_av3('$newmotlfile','$av3file')"

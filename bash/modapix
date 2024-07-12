@@ -1,0 +1,14 @@
+#!/bin/bash
+
+apix="${@: -1}"
+for mrc in "$@"
+do
+
+	if [ "$mrc"x != "$apix"x ]
+	then
+	
+		alterheader "$mrc" "$mrc" -del "$apix","$apix","$apix"
+
+	fi
+	
+done

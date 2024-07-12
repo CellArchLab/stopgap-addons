@@ -1,0 +1,43 @@
+#!/bin/bash
+# Generates a STOPGAP wedge list based a ctfphaseflip.txt file for IMOD.
+# Usage: imod2wedgelist <input ctfphaseflip.txt file> <output wedgelist.star> <tomo_num> <pixel size> <unbinned X size> <unbinned Y size> <unbinned Z size> <Z shift> <voltage> <amplitude contrast> <cs>
+# Example: imod2wedgelist ctfphaseflip.txt wedgelist.star 1 3.52 3712 3712 1856 0 300 0.07 2.7
+# NOTE: the dose column will be filled in with dummy values based on the tilt angle (higher tilt --> higher dose)
+# RDR 31/01/2022
+
+export ctffile=${1} # e.g. ctfphaseflip.txt
+export wedgefile=${2} # e.g. wedgelist.star
+export tomonum=${3} # e.g. 1
+export apix=${4} # e.g. 3.52
+export sizex=${5} # e.g. 3712
+export sizey=${6} # e.g. 3712
+export sizez=${7} # e.g. 1856
+export zshift=${8} # e.g. 0
+export kv=${9} # e.g. 300
+export ampcon=${10} # e.g. 0.07
+export cs=${11} # e.g. 2.7
+
+
+cat > ${wedgefile}<<EOF
+data_stopgap_wedgelist
+
+loop_
+_tomo_num
+_pixelsize
+_tomo_x
+_tomo_y
+_tomo_z
+_z_shift
+_tilt_angle
+_defocus
+_exposure
+_voltage
+_amp_contrast
+_cs
+
+EOF
+
+# awk -v tomonum="$tomonum" apix="$apix" sizex="$sizex" sizey="$sizey" sizez="$sizez" zshift="$zshift" kv="$kv" ampcon="$ampcon" cs="$cs" 'if (NR>1) { print tomonum,  apix,  sizex,  sizey,  sizez,  zshift, $3, $5/1000, sqrt($3*$3)+1,  kv,  ampcon,  cs }' ${ctffile} >> ${wedgefile}
+awk '{if (NR>1) printf "  %d   %.3f   %d   %d   %d   %d   %.2f   %.3f   %.3f   %.1f   %.2f   %.1f\n", ENVIRON["tomonum"],  ENVIRON["apix"],  ENVIRON["sizex"],  ENVIRON["sizey"],  ENVIRON["sizez"],  ENVIRON["zshift"], $3, ($5+$6)/2000, sqrt($3*$3)+1,  ENVIRON["kv"],  ENVIRON["ampcon"],  ENVIRON["cs"] }' ${ctffile} >> ${wedgefile}
+
+echo "" >> ${wedgefile}

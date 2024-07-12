@@ -1,0 +1,124 @@
+#! /usr/bin/env bash
+set -e              # Crash on error
+set -o nounset      # Crash on unset variables
+
+## run_stopgap.sh
+# A script for performing subtomogram averaging using 'stopgap'.
+# This script first generates a submission file and then launches 
+# 'stopgap_watcher', a MATLAB executable that manages the flow of parallel 
+# stopgap averging jobs.
+#
+# Stopgap uses a special .star file to define the subtomogram averaging 
+# parameters. These .star files can be generated using 'stopgap_job_parser.sh'.
+#
+# WW 06-2018
+# RDR 11-2020
+
+# Read config file. Can be given as an argument or read from the current directory.
+
+# # Check if we are on sciCORE cluster:
+# if [ `hostname | grep bc2.ch | echo $?` -eq 0 ]; then 
+#     ml purge
+#     ml load MCR/9.0
+#     ml load OpenMPI/4.1.1-GCC-10.3.0
+# fi
+
+cfgfile=sg_run.cfg
+if [ $# -eq 0 ]; then
+    source ${cfgfile}
+else
+    source "$1"
+fi
+rootdir=`pwd`/  # Root subtomogram averaging directory (automatically defined as the directory from which the script is called)
+
+
+
+################################################################################################################################################################
+##### SUBTOMOGRAM AVERAGING WORKFLOW                                                                                                       ie. the nasty bits...
+################################################################################################################################################################
+
+# Path to MATLAB executables
+watcher="${STOPGAPHOME}/bin/stopgap_watcher.sh"
+subtomo="${STOPGAPHOME}/bin/stopgap_mpi_slurm.sh"
+
+
+# Remove previous submission script
+rm -f submit_stopgap
+
+if [ "${run_type}" = "local" ]; then
+    echo "Running stopgap locally..."
+
+
+    # Local submit command
+    submit_cmd="mpiexec -np ${n_cores} ${subtomo} ${rootdir} ${paramfilename} ${n_cores} ${copy_local} ${run_type} 2> ${rootdir}/error_stopgap 1> ${rootdir}/log_stopgap &"
+    # echo ${submit_cmd}
+
+
+elif [ "${run_type}" = "sge" ]; then
+    echo "Preparing to run stopgap on SGE-cluster..."
+
+    # Write submission script
+    echo "#! /usr/bin/env bash" > submit_stopgap
+    echo "#$ -pe openmpi ${n_cores}" >> submit_stopgap             # Number of cores
+    echo "#$ -l h_vmem=${mem_limit}" >> submit_stopgap             # Memory limit
+    echo "#$ -l h_rt=${wall_time}" >> submit_stopgap               # Wall time
+    echo "#$ -q ${queue}" >> submit_stopgap                        # Averaging queue
+    echo "#$ -e ${rootdir}/error_stopgap" >> submit_stopgap        # Error file
+    echo "#$ -o ${rootdir}/log_stopgap" >> submit_stopgap          # Log file
+    echo "#$ -S /bin/bash" >> submit_stopgap                       # Submission environment
+    echo "source ~/.bashrc" >> submit_stopgap                      # Get proper envionment; i.e. modules
+    echo "mpiexec -np ${n_cores} ${subtomo} ${rootdir} ${paramfilename} ${n_cores} ${copy_local} ${run_type}" >> submit_stopgap
+    echo "exit" >> submit_stopgap
+    
+    # Make executable
+    chmod +x submit_stopgap
+    
+    # Submission command
+    submit_cmd="qsub submit_stopgap"
+
+elif [ "${run_type}" = "slurm" ]; then
+    echo "Preparing to run stopgap on slurm-cluster..."
+
+    # Convert seconds to minutes, taking the ceiling
+    wall_time=$(((($wall_time-1)/60)+1))
+
+    # Write submission script
+    echo "#! /usr/bin/env bash" > submit_stopgap
+    echo "#SBATCH -D ${rootdir}" >> submit_stopgap
+    echo "#SBATCH -e error_stopgap.job%j" >> submit_stopgap
+    echo "#SBATCH -o log_stopgap.job%j" >> submit_stopgap
+    echo "#SBATCH -J stopgap_subtomo" >> submit_stopgap
+    echo "#SBATCH --partition=${queue} " >> submit_stopgap
+    echo "#SBATCH --qos=${qos}" >> submit_stopgap
+    echo "#SBATCH --ntasks=${n_cores}" >> submit_stopgap
+    echo "#SBATCH --mem-per-cpu=${mem_limit}" >> submit_stopgap
+    echo "#SBATCH --time=${wall_time}" >> submit_stopgap
+    echo "" >> submit_stopgap
+    echo "ml purge" >> submit_stopgap
+    echo "ml load MCR/9.0" >> submit_stopgap
+    echo "ml load OpenMPI/4.1.1-GCC-10.3.0" >> submit_stopgap
+    echo "srun ${subtomo} ${rootdir} ${paramfilename} ${n_cores} ${copy_local} ${run_type}" >> submit_stopgap
+
+    # Make executable
+    chmod +x submit_stopgap
+    
+    # Submission command
+    submit_cmd="sbatch submit_stopgap"
+
+else
+    echo 'ACHTUNG!!! Invalid run_type!!!'
+    echo 'Only supported run_types are "local", "sge", "slurm" and "slurm_array"!!!'
+    exit 1
+fi
+
+
+
+# Run watcher
+eval "${watcher} ${rootdir} ${paramfilename} ${n_cores} ${run_type} '${submit_cmd}'"
+rm -f submit_stopgap
+
+exit
+
+
+
+

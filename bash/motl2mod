@@ -1,0 +1,13 @@
+#!/bin/bash
+# Converts a STOPGAP motive list (motl) to an IMOD model file. Also generates a .txt version of the points.
+# Usage: motl2mod <input_file> <output_file> <tomo_num>
+# Assumes IMOD programs are available in PATH.
+# RDR 24/11/2020
+
+motlfile=$1
+modfile=$2
+tomonum=$3
+
+awk -v tomonum="$tomonum" '(NF > 1 && $2 == tomonum) {print $3, $6+$10, $7+$11, $8+$12}' $motlfile > "${modfile%.*}".txt
+
+point2model -scat -circle 10 "${modfile%.*}".txt $2

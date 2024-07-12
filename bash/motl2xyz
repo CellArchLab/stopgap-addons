@@ -1,0 +1,24 @@
+#!/bin/bash
+# Converts a STOPGAP motive list (motl) to an XYZ text file which can be read by Chimera as a pseudo-atomic model.
+# 
+# RDR 23/06/2021
+
+motlfile=$1
+xyzfile=$2
+tomonum=$3
+
+if [ ${3}x != 'x' ]; then
+
+	awk '{ if (NF==1) print }' $motlfile > "${motlfile%.*}"_tomo${tomonum}.star
+	awk -v tomonum="$tomonum" '(NF > 1 && $2 == tomonum) {print}' $motlfile >> "${motlfile%.*}"_tomo${tomonum}.star
+
+	newmotlfile="${motlfile%.*}"_tomo${tomonum}.star
+
+else
+
+	newmotlfile=$1
+
+fi
+
+# awk '{if (NF>1) print "Mg", $6+$10, $7+$11, $8+$12}' ${newmotlfile} > "${xyzfile}"
+awk '{if (NF>1) print "Mg", $6, $7, $8}' ${newmotlfile} > "${xyzfile}"

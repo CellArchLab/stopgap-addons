@@ -1,0 +1,50 @@
+#! /usr/bin/env bash
+set -e              # Crash on error
+set -o nounset      # Crash on unset variables
+
+## stopgap_pca_job_parser.sh
+#
+# This script is used to generate a properly formated STOPGAP PCA parameter file.
+# The paramter file is plain-text file that contains the necessary information for
+# a complete PCA run; the old file is completely overwritten when the parser is 
+# run. 
+#
+# RDR 11-2020
+
+# Read config file. Can be given as an argument or read from the current directory.
+
+# # Check if we are on sciCORE cluster:
+# if [ `hostname | grep bc2.ch | echo $?` -eq 0 ]; then 
+#     ml purge
+#     ml load MCR/9.0
+#     ml load OpenMPI/4.1.1-GCC-10.3.0
+# fi
+
+cfgfile=sg_pca.cfg
+if [ $# -eq 0" ]; then
+    source ${cfgfile}
+else
+    source "$1"
+fi
+rootdir=`pwd`/  # Root subtomogram averaging directory (automatically defined as the directory from which the script is called)
+
+
+
+########################################################################################################################################################################################################
+########## GENERATE STOPGAP PCA PARAMETER FILE
+########################################################################################################################################################################################################
+
+# Path to MATLAB executables
+parser="${STOPGAPHOME}/bin/stopgap_parser.sh"
+
+
+# Run parser 
+eval "${parser} pca param_name ${param_name} rootdir ${rootdir} tempdir ${tempdir} commdir ${commdir} rawdir ${rawdir} refdir ${refdir} maskdir ${maskdir} listdir ${listdir} subtomodir ${subtomodir} rvoldir ${rvoldir} pcadir ${pcadir} metadir ${metadir} pca_task ${pca_task} iteration ${iteration} motl_name ${motl_name} wedgelist_name ${wedgelist_name} binning ${binning} ref_name ${ref_name} mask_name ${mask_name} subtomo_name ${subtomo_name} rvol_name ${rvol_name} rwei_name ${rwei_name} filtlist_name ${filtlist_name} data_type ${data_type} ccmat_name ${ccmat_name} covar_name ${covar_name} n_eigs ${n_eigs} eigenvol_name ${eigenvol_name} eigenfac_name ${eigenfac_name} eigenval_name ${eigenval_name} apply_laplacian ${apply_laplacian} scoring_fcn ${scoring_fcn} symmetry ${symmetry} fthresh ${fthresh}"
+exit
+
+
+
+
+
+
+

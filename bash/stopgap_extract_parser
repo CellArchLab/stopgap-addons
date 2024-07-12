@@ -1,0 +1,41 @@
+#! /usr/bin/env bash
+set -e              # Crash on error
+set -o nounset      # Crash on unset variables
+
+## stopgap_extract_parser.sh
+# This script is used to generate a properly formated STOPGAP .star parameter 
+# file for subtomogram extraction. 
+#
+# If a tomolist is given, that will be used to define the path to tomograms, 
+# ingnoring the tomodir setting. If a tomolist is not given, then a tomodir
+# must be given, and all tomograms must be named as their tomo_num in the 
+# input motivelist.
+#
+# WW 04-2021
+
+##### INPUTS #####
+
+# Parser options
+param_name='params/extract_param.star'            # Name of the parameter .star file; if the name exists, the file is appended. File is written into the current working directory. 
+
+cfgfile=sg_subtomo.cfg
+if [ $# -eq 0 ]; then
+    source ${cfgfile}
+else
+    source "$1"
+fi
+rootdir=`pwd`/  # Root subtomogram averaging directory (automatically defined as the directory from which the script is called)
+
+
+########################################################################################################################################################################################################
+########## GENERATE STOPGAP .STAR FILE
+########################################################################################################################################################################################################
+
+# Path to MATLAB executables
+parser="${STOPGAPHOME}/bin/stopgap_parser.sh"
+
+
+# Run parser
+eval "${parser} extract param_name ${param_name} rootdir ${rootdir} tempdir ${tempdir} commdir ${commdir} listdir ${listdir} metadir ${metadir} motl_name ${motl_name} wedgelist_name ${wedgelist_name} tomolist_name ${tomolist_name} tomodir ${tomodir} subtomo_name ${subtomo_name} boxsize ${boxsize} pixelsize ${pixelsize} output_format ${output_format}"
+
+exit

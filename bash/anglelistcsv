@@ -1,0 +1,21 @@
+#!/bin/bash
+# Generates an angle list in CSV format for STOPGAP template matching, optionally with coarse or complete definition of Euler angles on the cone. Default is "complete".
+# Syntax:
+# anglelistcsv <angincr> <output .csv filename> [<complete|coarse>]
+
+# RDR 02/06/2021
+
+# ml purge
+# ml MATLAB
+
+angincr=$1
+csvfile=$2
+cone_search_type=$3
+
+if [ $# -lt 3 ]; then
+
+	cone_search_type='complete'
+
+fi
+
+matlab -nojvm -batch "sg_calculate_global_search_angle_list_csv($angincr,'$csvfile','$cone_search_type')"

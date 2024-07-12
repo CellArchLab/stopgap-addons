@@ -1,0 +1,41 @@
+#!/bin/bash
+
+sed 's/,/ /g' $1 > $2
+
+dos2unix $2
+
+awk '{print NR, 1, 1, NR, "A", $1, $2, $3, 0.0, 0.0, 0.0, 0.0, $7, $9, $8, 1}' $2 > $2.tmp
+
+if [ ${3}x != 'x' ]; then
+
+	sort -R $2.tmp | head -n ${3} | sort -g > $2.tmp2
+	mv $2.tmp2 $2.tmp
+
+fi
+
+cat <<EOF > $2
+data_stopgap_motivelist
+ 
+loop_
+_motl_idx
+_tomo_num
+_object
+_subtomo_num
+_halfset
+_orig_x
+_orig_y
+_orig_z
+_score
+_x_shift
+_y_shift
+_z_shift
+_phi
+_psi
+_the
+_class
+
+EOF
+
+cat $2.tmp >> $2
+
+rm $2.tmp

@@ -1,0 +1,24 @@
+#!/bin/bash
+
+if [ ${3:-foo} == "foo" ]; then
+	nchunks=100
+else
+	nchunks=$3
+fi
+
+nvols=`awk '{ if (NF>1) print}' $1 | wc -l`; 
+
+echo " Motive list $1 has $nvols volumes. Dividing into $nchunks chunks for half-set assignment..."
+
+awk -v nvols=$nvols '{ chunksize=nvols/100
+
+if ( NF > 1 )                                                                
+
+if (int($1/chunksize) % 2 == 0)
+
+ $5="B"; 
+
+else
+
+$5="A";
+print }' $1 > $2

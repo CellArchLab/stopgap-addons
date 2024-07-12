@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Script to convert a STOPGAP motive list STAR file to bild format for plotting angular distribution
+# Based on star2bild.py from PyEM: https://github.com/asarnow/pyem/
+# 
+# Remember:
+# STOPGAP is Z-X-Z
+# RELION is Z-Y-Z
+# https://www.ccpem.ac.uk/user_help/rotation_conventions.php
+# 
+# rln_rot = sg_phi + 90
+# rln_psi = sg_psi - 90
+# rln_tilt = sg_the
+
+# module purge
+# This script expects pyem to be available in your PATH!
+# See installation instructions at https://github.com/asarnow/pyem/tree/master/pyem/cli
+module load pyem
+
+input=$1
+output=$2
+apix=$3
+boxsize=$4
+
+echo "data_particles" > tmp.star
+echo "" >>tmp.star
+echo "loop_" >> tmp.star
+echo "_rlnAngleRot #1" >> tmp.star
+echo "_rlnAnglePsi #2" >> tmp.star
+echo "_rlnAngleTilt #3" >> tmp.star
+
+# awk '{ if (NF > 1) print -$13-90, -$14+90, -$15}' $1 >> tmp.star # The sign will depend whether the angles describe the rotation of the particle to be inserted in the average, or the rotation of the reference to match the orientation of the particle.
+awk '{ if (NF > 1) print $13+90, $14-90, $15}' $1 >> tmp.star
+
+python `which star2bild.py` tmp.star $2 --apix $3 --boxsize $4
+
+\rm tmp.star
