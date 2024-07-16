@@ -1,5 +1,5 @@
-# stopgap-utils
-A set of utilities for enhancing the [STOPGAP](https://github.com/wan-lab-vanderbilt/STOPGAP) experience.
+# stopgap-addons
+A set of add-ons for enhancing the [STOPGAP](https://github.com/wan-lab-vanderbilt/STOPGAP) experience.
 
 ## Installation instructions
 0. Install dependencies:
