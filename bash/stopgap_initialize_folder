@@ -25,9 +25,9 @@ if [[ ${task} == 'subtomo' ]]; then
 elif [[ ${task} == 'tm' ]]; then
     echo "Initializing template matching folder..."
     mkdir -p params temp comm lists tmpl masks maps meta
-    \cp $STOPGAP_UTILS_HOME/config/${task}/tomolist.txt lists/
-    \cp $STOPGAP_UTILS_HOME/config/${task}/tlist.star lists/
-    \cp $STOPGAP_UTILS_HOME/config/${task}/anglelist_20deg.csv lists/
+    \cp ${STOPGAP_ADDONS_HOME}/config/${task}/tomolist.txt lists/
+    \cp ${STOPGAP_ADDONS_HOME}/config/${task}/tlist.star lists/
+    \cp ${STOPGAP_ADDONS_HOME}/config/${task}/anglelist_20deg.csv lists/
 
 elif [[ ${task} == 'pca' ]]; then
     echo "Initializing PCA folder..."
@@ -47,14 +47,14 @@ if  [ -f $cfgfile ]; then
 echo "Config file $cfgfile already exists! Not copying template file."
 else
 echo "Config file $cfgfile not present. Copying template file."
-\cp $STOPGAP_UTILS_HOME/config/${task}/$cfgfile .
+\cp ${STOPGAP_ADDONS_HOME}/config/${task}/$cfgfile .
 
 cfgfile=sg_run.cfg
 if  [ -f $cfgfile ]; then
 echo "Config file $cfgfile already exists! Not copying template file."
 else
 echo "Config file $cfgfile not present. Copying template file."
-\cp $STOPGAP_UTILS_HOME/config/${task}/$cfgfile .
+\cp ${STOPGAP_ADDONS_HOME}/config/${task}/$cfgfile .
 fi
 
 # cfgfile=sg_run.cfg
@@ -62,5 +62,5 @@ fi
 # echo "Config file $cfgfile already exists! Not copying template file."
 # else
 # echo "Config file $cfgfile not present. Copying template file."
-# \cp $STOPGAP_UTILS_HOME/config/$cfgfile .
+# \cp ${STOPGAP_ADDONS_HOME}/config/$cfgfile .
 fi
