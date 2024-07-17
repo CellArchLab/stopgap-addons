@@ -4,7 +4,7 @@ A set of add-ons for enhancing the [STOPGAP](https://github.com/wan-lab-vanderbi
 ## Installation instructions
 0. Install dependencies:
   * [STOPGAP](https://github.com/wan-lab-vanderbilt/STOPGAP) obviously. Please refer to the STOPGAP manual for installation and configuration details.
-  * [MATLAB](https://www.mathworks.com/products/matlab.html) which you probably already have since you are running STOPGAP
+  * [MATLAB](https://www.mathworks.com/products/matlab.html) (which you probably already have since you are running STOPGAP)
   * [IMOD](https://bio3d.colorado.edu/imod/)
   * [gnuplot](http://www.gnuplot.info/) (possibly already available in your Linux system or HPC environment)
   * There is one script (`sgstar2bild`) that relies on [pyem](https://github.com/asarnow/pyem) being available
