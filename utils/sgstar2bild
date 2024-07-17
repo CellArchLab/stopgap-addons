@@ -12,7 +12,7 @@
 # rln_psi = sg_psi - 90
 # rln_tilt = sg_the
 
-# module purge
+module purge
 # This script expects pyem to be available in your PATH!
 # See installation instructions at https://github.com/asarnow/pyem/tree/master/pyem/cli
 module load pyem
