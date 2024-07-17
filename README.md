@@ -48,4 +48,4 @@ prepend_path("PATH", pathJoin(root, "utils"))
 
 ```
 ## Known issues
-The scripts provided here mostly lack documentation or even a proper description of the input parameter. I plan to add them over time. User at your own risk. Please open an [issue](https://github.com/CellArchLab/stopgap-addons/issues) if you encounter problems.
+The scripts provided here mostly lack documentation or even a proper description of the input parameters. I plan to add them over time. User at your own risk. Please open an [issue](https://github.com/CellArchLab/stopgap-addons/issues) if you encounter problems.
