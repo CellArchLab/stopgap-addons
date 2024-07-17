@@ -37,7 +37,7 @@ depends_on("gnuplot")
 depends_on("IMOD")
 depends_on("STOPGAP")
 
-local root = "/scicore/projects/scicore-p-structsoft/ubuntu/software/stopgap-utils/"
+local root = "/path/to/stopgap-addons/"
 
 setenv("STOPGAP_ADDONS_HOME", root)
 prepend_path("PATH", pathJoin(root, "bash"))
