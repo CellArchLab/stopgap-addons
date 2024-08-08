@@ -79,9 +79,6 @@ elif [ "${run_type}" = "sge" ]; then
 elif [ "${run_type}" = "slurm" ]; then
     echo "Preparing to run stopgap on slurm-cluster..."
 
-    # Convert seconds to minutes, taking the ceiling
-    wall_time=$(((($wall_time-1)/60)+1))
-
     # Write submission script
     echo "#! /usr/bin/env bash" > submit_stopgap
     echo "#SBATCH -D ${rootdir}" >> submit_stopgap
@@ -91,12 +88,14 @@ elif [ "${run_type}" = "slurm" ]; then
     echo "#SBATCH --partition=${queue} " >> submit_stopgap
     echo "#SBATCH --qos=${qos}" >> submit_stopgap
     echo "#SBATCH --ntasks=${n_cores}" >> submit_stopgap
+    echo "#SBATCH --cpus-per-task=1" >> submit_stopgap
     echo "#SBATCH --mem-per-cpu=${mem_limit}" >> submit_stopgap
     echo "#SBATCH --time=${wall_time}" >> submit_stopgap
     echo "" >> submit_stopgap
     echo "ml purge" >> submit_stopgap
-    echo "ml load MCR/9.0" >> submit_stopgap
-    echo "ml load OpenMPI/4.1.1-GCC-10.3.0" >> submit_stopgap
+    echo "ml load STOPGAP/0.7.4" >> submit_stopgap
+    echo "unset SLURM_MEM_PER_NODE" >> submit_stopgap
+    # echo "mpiexec -np ${n_cores} ${subtomo} ${rootdir} ${paramfilename} ${n_cores} ${copy_local} ${run_type}" >> submit_stopgap
     echo "srun ${subtomo} ${rootdir} ${paramfilename} ${n_cores} ${copy_local} ${run_type}" >> submit_stopgap
 
     # Make executable
@@ -111,11 +110,9 @@ else
     exit 1
 fi
 
-
-
 # Run watcher
 eval "${watcher} ${rootdir} ${paramfilename} ${n_cores} ${run_type} '${submit_cmd}'"
-rm -f submit_stopgap
+# rm -f submit_stopgap
 
 exit
 
