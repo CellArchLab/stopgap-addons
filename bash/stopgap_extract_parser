@@ -15,9 +15,6 @@ set -o nounset      # Crash on unset variables
 
 ##### INPUTS #####
 
-# Parser options
-param_name='params/extract_param.star'            # Name of the parameter .star file; if the name exists, the file is appended. File is written into the current working directory. 
-
 cfgfile=sg_subtomo.cfg
 if [ $# -eq 0 ]; then
     source ${cfgfile}
@@ -36,6 +33,6 @@ parser="${STOPGAPHOME}/bin/stopgap_parser.sh"
 
 
 # Run parser
-eval "${parser} extract param_name ${param_name} rootdir ${rootdir} tempdir ${tempdir} commdir ${commdir} listdir ${listdir} metadir ${metadir} motl_name ${motl_name} wedgelist_name ${wedgelist_name} tomolist_name ${tomolist_name} tomodir ${tomodir} subtomo_name ${subtomo_name} boxsize ${boxsize} pixelsize ${pixelsize} output_format ${output_format}"
+eval "${parser} extract param_name ${param_name_extract} rootdir ${rootdir} tempdir ${tempdir} commdir ${commdir} listdir ${listdir} metadir ${metadir} motl_name ${motl_name_extract} wedgelist_name ${wedgelist_name} tomolist_name ${tomolist_name} tomodir ${tomo_dir} subtomo_name ${subtomo_name} boxsize ${boxsize} pixelsize ${pixelsize} output_format ${output_format}"
 
 exit
