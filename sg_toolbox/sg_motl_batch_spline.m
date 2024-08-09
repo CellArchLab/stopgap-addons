@@ -156,7 +156,7 @@ end
 %% Generate complete motl
 
 % Concatenate all tomos
-allmotl = sg_motl_concatenate(false,tomo_cell);
+allmotl = sg_motl_concatenate(false,motl_cell);
 n_motls = numel(allmotl.motl_idx);
 
 % Fill remaining fields
