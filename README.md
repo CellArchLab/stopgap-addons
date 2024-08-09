@@ -17,6 +17,7 @@ git clone https://github.com/CellArchLab/stopgap-addons.git
 export STOPGAP_ADDONS_HOME=/path/to/stopgap-addons/
 export PATH=${STOPGAP_ADDONS_HOME}/bash:$PATH
 export PATH=${STOPGAP_ADDONS_HOME}/utils:$PATH
+export MATLABPATH=${STOPGAP_ADDONS_HOME}/sg_toolbox:$MATLABPATH
 ```
 ### Lua modulefile suggestion
 If you are managing your packages through [Lmod](https://lmod.readthedocs.io/), here is an idea for a modulefile definition:
@@ -45,6 +46,7 @@ local root = "/path/to/stopgap-addons/"
 setenv("STOPGAP_ADDONS_HOME", root)
 prepend_path("PATH", pathJoin(root, "bash"))
 prepend_path("PATH", pathJoin(root, "utils"))
+prepend_path("MATLABPATH", pathJoin(root, "sg_toolbox"))
 
 ```
 ## Known issues
