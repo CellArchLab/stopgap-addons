@@ -1,0 +1,6 @@
+#!/bin/bash
+
+inmotlfile=$1
+outmotlfile=$2
+
+matlab -nojvm -batch "halfobjecthalfsets('$inmotlfile','$outmotlfile')"
