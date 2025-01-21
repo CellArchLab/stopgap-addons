@@ -106,7 +106,7 @@ elif [ "${run_type}" = "slurm" ]; then
 
 else
     echo 'ACHTUNG!!! Invalid run_type!!!'
-    echo 'Only supported run_types are "local", "sge", "slurm" and "slurm_array"!!!'
+    echo 'Only supported run_types are "local", "sge", and "slurm"!!!'
     exit 1
 fi
 
