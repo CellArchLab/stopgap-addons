@@ -50,6 +50,17 @@ parser="${STOPGAPHOME}/bin/stopgap_parser.sh"
 
 
 # Run parser
-eval "${parser} temp_match param_name ${param_name} rootdir ${rootdir} tempdir ${tempdir} commdir ${commdir} listdir ${listdir} tmpldir ${tmpldir} maskdir ${maskdir} mapdir ${mapdir} metadir ${metadir} tomolist_name ${tomolist_name} wedgelist_name ${wedgelist_name} tlist_name ${tlist_name} smap_name ${smap_name} omap_name ${omap_name} tmap_name ${tmap_name} binning ${binning} lp_rad ${lp_rad} lp_sigma ${lp_sigma} hp_rad ${hp_rad} hp_sigma ${hp_sigma} calc_exp ${calc_exp} calc_ctf ${calc_ctf} apply_laplacian ${apply_laplacian} noise_corr ${noise_corr}"
+
+if [[ -v tilesize ]]; then
+
+    echo "tilesize=${tilesize}, using parser for STOPGAP >= 0.7.5"
+    eval "${parser} temp_match param_name ${param_name} rootdir ${rootdir} tempdir ${tempdir} commdir ${commdir} listdir ${listdir} tmpldir ${tmpldir} maskdir ${maskdir} mapdir ${mapdir} metadir ${metadir} tomolist_name ${tomolist_name} wedgelist_name ${wedgelist_name} tlist_name ${tlist_name} smap_name ${smap_name} omap_name ${omap_name} tmap_name ${tmap_name} binning ${binning} tilesize ${tilesize} lp_rad ${lp_rad} lp_sigma ${lp_sigma} hp_rad ${hp_rad} hp_sigma ${hp_sigma} calc_exp ${calc_exp} calc_ctf ${calc_ctf} apply_laplacian ${apply_laplacian} noise_corr ${noise_corr}"
+
+else
+
+    echo "tilesize is not set, using parser for STOPGAP <= 0.7.4"
+    eval "${parser} temp_match param_name ${param_name} rootdir ${rootdir} tempdir ${tempdir} commdir ${commdir} listdir ${listdir} tmpldir ${tmpldir} maskdir ${maskdir} mapdir ${mapdir} metadir ${metadir} tomolist_name ${tomolist_name} wedgelist_name ${wedgelist_name} tlist_name ${tlist_name} smap_name ${smap_name} omap_name ${omap_name} tmap_name ${tmap_name} binning ${binning} lp_rad ${lp_rad} lp_sigma ${lp_sigma} hp_rad ${hp_rad} hp_sigma ${hp_sigma} calc_exp ${calc_exp} calc_ctf ${calc_ctf} apply_laplacian ${apply_laplacian} noise_corr ${noise_corr}"
+
+fi
 
 exit
