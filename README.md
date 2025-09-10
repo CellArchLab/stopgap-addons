@@ -49,5 +49,8 @@ prepend_path("PATH", pathJoin(root, "utils"))
 prepend_path("MATLABPATH", pathJoin(root, "sg_toolbox"))
 
 ```
+## Compatibility with different STOPGAP versions
+If the variable `tilesize` is defined in [sg_tm.cfg](config/tm/sg_tm.cfg), `stopgap_tm_parser` will assume you are using STOPGAP v0.7.5 or later.
+
 ## Known issues
 The scripts provided here mostly lack documentation or even a proper description of the input parameters. I plan to add them over time. User at your own risk. Please open an [issue](https://github.com/CellArchLab/stopgap-addons/issues) if you encounter problems.
